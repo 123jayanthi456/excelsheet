@@ -1,0 +1,73 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Upload Excel Data</title>
+    <link rel="stylesheet" href="store.css">
+  </head>
+  <body>
+    <div class=" s1">
+    <form id="upload-form">
+      <input type="file" id="input-file" name="excel-file">
+        <label for="field-select">Upload File</label>
+      <button type="submit" id="submit">submit</button>
+    </form>
+    </div>
+     <div class="s2">
+      <form id="Delete-form">
+        <input type="file" id="output-file" name="excel-file">
+        <label for="field-select">Delete File</label>
+        <button type="submit" id="submit1">submit</button>
+      </form>
+    </div>
+    <script>
+
+      const form1 = document.querySelector("#Delete-form");
+      form1.addEventListener('submit',function(event){
+        event.preventDefault();
+
+        const formdata1=new FormData();
+        const outputFile=document.getElementById("output-file").files[0];
+        formdata1.append("outputfile",outputFile)
+
+        fetch('http://localhost:8080/delete',{
+        method:'DELETE',
+        body:formdata1,
+        })
+
+        .then(response=> response.json())
+        .then(data=>{
+
+          console.log("Deleted Successfully")
+        })
+        .catch(error=>{
+
+          console.log("error :" ,error);
+        })
+      
+
+      })
+      const form = document.querySelector('#upload-form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formdata = new FormData();
+        const file = document.getElementById("input-file").files[0];
+        formdata.append("document",file);
+        fetch('http://localhost:8080/upload', {
+          method: 'POST',
+          body: formdata,
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('Data uploaded successfully');
+          } else {
+            console.log('upload failed.');
+          }
+        })
+        .catch(error => {
+          console.log('Error:', error);
+        });
+      });
+</script>
+     </body>
+      </html>
